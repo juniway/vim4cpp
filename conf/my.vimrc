@@ -1,0 +1,468 @@
+set nocompatible
+filetype off
+"-------------- Vundle Plugins -----------------------------
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'scrooloose/nerdtree'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/taglist.vim'
+Plugin 'bling/vim-airline'
+Plugin 'vim-scripts/Cpp11-Syntax-Support'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive' "查看本次修改与git repo里代码的区别,:Gdiff
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'scrooloose/syntastic'
+Plugin 'SirVer/ultisnips'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'powerline/fonts'
+Plugin 'flazz/vim-colorschemes'
+
+Plugin 'klen/python-mode'
+
+" Plugin 'sjl/gundo.vim'
+" Plugin 'tpope/vim-sleuth'
+" Plugin 'tyru/open-browser.vim'
+" Plugin 'brooth/scroll_mode.vim'
+" Plugin 'plasticboy/vim-markdown'
+" Plugin 'mhinz/vim-signify'
+" Plugin 'justinmk/vim-sneak'
+" Plugin 'Raimondi/delimitMate'
+" Plugin 'rodnaph/vim-color-schemes'
+
+" Plugin 'emmetio/emmet' "自动生成HTML/CSS
+" Plugin 'tpope/vim-commentary'
+" Plugin 'shougo/neocomplcache.vim' "Neocomplcache + SnipMate 已经过时,现在用 YouCompleteMe + UltiSnips
+call vundle#end()
+
+filetype indent plugin on
+"--------------- basic config ------------------------------
+syntax on
+syntax enable
+
+set path+=/usr/include,/usr/include/linux,/usr/local/include/c++/5.3,/usr/local/include/boost/,/usr/include/x86_64-linux-gnu,/usr/local/include
+
+"----------------  Color Scheme --------------------------------
+" default colorscheme is located  at /usr/share/vim/vim74/colors
+let s:running_windows = has("win16") || has("win32") || has("win64")
+let s:colorful_term = (&term =~ "xterm") || (&term =~ "screen") 
+colorscheme molokai     " Note: When open vim in tmux session, since tmux is by defaul not true color 256 mode,
+                        " which causes vim visual mode doesn't display correctly for molokai colorscheme, we 
+                        " can force tmux to use 256 colors by tmux -2
+let s:molokai_original = 1
+color evening
+
+" colorscheme jellybeans
+" let g:jellybeans_use_lowcolor_black = 0
+
+set background=dark     " set background color matching syntax 
+set cursorline
+set cursorcolumn
+set encoding=utf-8
+set fenc=utf-8
+set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
+set fileencoding=utf-8
+" set fileencodings=utf-8,gbk              ",utf-16,gb2312 可识别文件编码
+" set langmenu=zh_CN.UTF-8
+" language message zh_CN.UTF-8
+hi Normal ctermbg=236 guibg=#32322f
+hi NonText ctermbg=236 guibg=#32322f
+" set colorcolumn=80
+" hi Colorcolumn ctermbg=blue ctermfg=blue guibg=lightgrey
+au BufWinEnter * let w:m2= matchadd('ColorColumn', '\%81v', -1)
+
+hi Cursorcolumn ctermbg=red
+hi CursorLine cterm=underline term=NONE guibg=green
+
+set cursorcolumn
+
+" augroup collumnLimit
+"     autocmd!
+"     autocmd BufEnter,WinEnter,FileType c,cpp,python 
+"          \  hi CollumnLimit ctermbg=DarkGrey guibg=DarkGrey
+"     let collumnLimit = 80
+"     let pattern = '\%<' . (collumnLimit+1) . 'v.\%>' . collumnLimit . 'v'
+"     autocmd BufEnter,WinEnter,FileType c,cpp,python
+"          \  let w:m1=matchadd('CollumnLimit', pattern, -1)
+" augroup END
+
+" let &colorcolumn=join(range(81,999),",")
+
+set history=999
+set undolevels=700
+set textwidth=360
+set nowrap              " don't wrap lines"
+set fo-=t               " don't automatically wrap text when typing
+set scroll=8            " set number of line that Ctrl-D or Ctrl-U can scroll
+set scrolloff=10        " scrolloff, leave 10 line above and below when moving cursor
+set wildmenu            " Enable a menu at the bottom of the window for command completion when type command in vim
+set showcmd             " Show what command you are typing at the bottom
+set number
+set numberwidth=1       " Width will automatically increase to fit the width of maximun number of line, default 4
+" set rnu               " relative number Vim 7.3+
+set whichwrap+=<,>,[,],h,l  " Make -> or <- can go beyond current line
+" set linebreak         " switch a word to the next line if its len too long
+" highlight OverLength ctermbg=red guibg=#C0C0C0 
+" match OverLength /\%81v.\+/
+
+"-- Indent --
+set expandtab           " Tab can be replaced with whitespace
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
+set cindent             " ----------------- C/C++ Code Style Setting --------------
+                        " V select a block of code, then =, code will auto indent
+                        " :set paste before do a paste where the buffer is
+                        " another file, after paste, :set nopaste to get back
+                        " autoindent
+
+"-- Matching --
+set showmatch           " Show matching brackets{}[]()...
+set matchtime=1
+set ignorecase          " Case insensitive matching
+set smartcase
+set magic               " It is recommanded that magic is set, helpful for pattern matching
+set completeopt=longest,menu
+
+set backspace=indent,eol,start      " Make backspace key can delete when it hit line begin, tab, and start
+set nostartofline       " When doing page scrolling by using Ctrl+d/u/b/f, or "G","gg", etc, keep cursor in same column
+set confirm             " :q :qa with confirm
+set vb t_vb=            " disable visualbell and window flashing when error occurs"
+" set shortmess=filnxtToO         " Default is filnxtToO, it is good because
+                                  " it mutes annoying 'Hit Enter to continue'
+                                  " prompt
+set cmdheight=1         " leave space in the bottom of the window for displaying messages
+
+"-- Search --
+set hlsearch                        " Highlight search reasult
+set incsearch                       " Matching when typing
+"set nowrapscan                     " Don't search rollback when hit file end
+
+" set list                          " should be used combined with the below line
+" set listchars=eol:$,nbsp:_,tab:>-,trail:~,extends:>,precedes:< " display whitespace invisible characters as ...
+" set list lcs=tab:>-
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+set history=200
+
+"-- Status --
+set lazyredraw                      " Don't redraw while running macros
+set statusline=%F
+set title                           "show title in console title bar
+set laststatus=2
+set ruler
+
+"-- Buffers --
+set autoread            " auto update file when it is modified in another window"
+set autowrite           " be cautin with autowrite in case of some accident type was saved out of your awareness
+set hidden              " keep hidden buffers when switch between unsaved windows
+set clipboard+=unnamed  " share windows clipboard
+set pastetoggle=<F11>
+
+set notimeout ttimeout ttimeoutlen=200
+
+" Other Features
+" set spell
+
+"-- Backup --
+" Disable stupid backup and swap files - they trigger too many events
+set nobackup
+set nowb              " no write backup, make backup before overwriting a file
+set noswapfile
+" set backupdir-=.
+" set backupdir^=~/tmp,/tmp
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip "Linux/MaxOSX
+
+"-- Mouse --
+" set mouse=a       "enable mouse usage whenever possible
+
+"-- Fold --
+"set nofoldenable                      " Fold enable
+set foldlevel=100                        " Fold Level, default 0
+"set foldcolumn=1
+set foldopen=block,hor,mark,percent,quickfix,tag      " These movements open folds
+"set foldmethod=syntax                 " Default manual
+function SimpleFoldTest() "{
+    return getline(v:foldstart).' '
+endfunction "}
+set foldtext=SimpleFoldText()           " Custom fold text function (cleaner than default)
+
+" ---- GUI Options -----
+" set guicursor=a:block-blinkon0        " disable cursor blinking
+" set guioptions-=m
+" set guioptions-=T
+" guifont=Courier\ New:h12
+
+let mapleader=";"
+nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+
+nnoremap <c-n> :nohl<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>WQ :wa<CR>:q<CR>
+nnoremap <leader>Q :qa!<CR>
+
+inoremap <C-\> <C-o>:left 0<Cr><BS>
+
+" easier moving between tabs
+"" map <Leader>n <esc>:tabprevious<CR>
+"" map <Leader>m <esc>:tabnext<CR>
+
+nnoremap <CR> o<Esc>
+nnoremap <space> *
+
+" ------------------------- YouCompleteMe -------------------------- "
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_key_invoke_completion = '<C-K>'
+let g:ycm_error_symbol = '>>'
+let g:ycm_warning_symbol = '>*'
+let g:ycm_show_diagnostics_ui = 0
+" 先跳到定义，如果没找到，则跳到声明处
+nnoremap <leader>gd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>gi :YcmCompleter GoToInclude<CR>
+nnoremap gy :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap gu :YcmCompleter GoToImprecise<CR>
+
+nnoremap <leader>jt :YcmCompleter GetType<CR>
+nmap <F4> :YcmDiags<CR>
+
+" ---------------------------- NerdTree ---------------------------- "
+nnoremap<F10> :NERDTreeToggle<CR>
+" autocmd vimenter * NERDTree "automatic open NerdTree when enter vim"
+autocmd StdinReadPre * let s:std_in=1
+auto VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+let NERDTreeIgnore=['\.pyc$', '\~$']                "ignore files in NERDTree
+
+" ---------------------------- UltiSnips ---------------------------- "
+let g:UltiSnipsUsePythonVersion = 2
+let g:UltiSnipsExpandTrigger="<c-'>"
+let g:UltiSnipsJumpForwardTrigger="<c-'>"
+let g:UltiSnipsJumpBackwardTrigger="<c-i>"
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "cppenv/snippets"]
+
+" ----------------------------- Airline ---------------------------- "
+let g:airline#extensions#tabline#enable = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" ----------------------------- ctags ------------------------------ "
+" ctags -R *
+" press F5 will regenerate tags file, and update taglist
+" map <F5> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR><CR> :TlistUpdate<CR>
+" :TlistUpdate<CR>
+" --c++-kinds=+p                            " 为Cpp文件增加函数原型的标签
+" --fields=+iaS                             " 在标签文件中加入继承信息(i)、类成员的访问控制信息(a)、以及函数的指纹(S)
+" --extra=+q                                " 为标签增加类修饰符。注意，如果没有此选项，将不能对类成员补全
+" set tags+=./tags                          " 表示搜索当前工作目录下的 tags 文件
+
+set tags=tags,./tags,/usr/include/tags,/usr/local/include/tags
+ 
+" ---------------------------- cscope ------------------------------ "
+if has("cscope")
+    set csprg=/usr/bin/cscope               " 指定用来执行cscope的命令
+    set csto=0                              " 设置cstag命令查找次序：0先找cscope数据库再找标签文件；1先找标签文件再找cscope数据库
+    set cst                                 " 同时搜索cscope数据库和标签文件
+    set cscopequickfix=s-,c-,d-,i-,t-,e-    " 使用QuickFix窗口来显示cscope查找结果
+    set nocsverb
+    if filereadable("cscope.out")           " 若当前目录下存在cscope数据库，添加该数据库到vim
+        cs add cscope.out
+    elseif $CSCOPE_DB != ""                 " 否则只要环境变量CSCOPE_DB不为空，则添加其指定的数据库到vim
+        cs add $CSCOPE_DB
+    endif
+    set csverb
+endif
+
+" cscope usage: cscope -Rbq
+nmap <F4> :cs add ./cscope.out .<CR><CR><CR> :cs reset<CR>
+nmap <C-_>s :cs find s <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>c :cs find c <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>t :cs find t <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>e :cs find e <C-R>=expand("<cword>")<CR><CR> :copen<CR><CR>
+nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-_>i :cs find i <C-R>=expand("<cfile>")<CR><CR> :copen<CR><CR>
+
+" ----------------------------- TagBar ----------------------------- "
+nmap <F9> :TagbarToggle<CR>
+let g:tagbar_ctags_bin='/usr/bin/ctags'
+let g:tagbar_width=30
+let g:tagbar_autofocus = 1       " 启动时自动focus
+" autocmd BufReadPost *.cpp,*.c,*.cc,*.cxx,*.h,*.hpp call tagbar#autoopen()
+
+" ---------------------------- taglist ----------------------------- "
+let Tlist_Ctags_Cmd='ctags'       " ctags command, since it is in env, we can execute directly
+let Tlist_Use_Right_Window=1      " Show tags window in right side, 0 for left
+let Tlist_Show_One_File = 1
+let Tlist_File_Fold_Auto_Close=1  " not current file, function list will be folded
+let Tlist_Exit_OnlyWindow = 1     " when taglist is the last open window, quit vim
+let Tlist_Process_File_Always=1   " update tags in real time
+let Tlist_Inc_Winwidth=0
+nmap TL :Tlist<CR>
+nmap TU :TlistUpdate<CR>
+
+" ---------------------------- Syntastic --------------------------- "
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_cpp_compiler = 'g++'
+let g:syntastic_cpp_compiler_options = '-std=c++14'
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" disable warning
+" let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': []  }
+" nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+let g:syntastic_quiet_messages={'level':'warnings'}
+
+" --------------------------- C++ ------------------------------ "
+" autocmd BufNewFile,BufRead * execute cppenv#dummy()
+" autocmd BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go execute cppenv#infect()                                                                                                                                                                                       
+" autocmd BufNewFile,BufRead *.h,*.hpp,*.inl,*.ipp,*.cpp,*.c,*.cc,*.go set fo-=ro  
+
+" --------------------------- Python ------------------------------ "
+let g:ctrlp_max_height = 30
+set wildignore+=*.pyc
+set wildignore+=*_build/*
+set wildignore+=*/coverage/*
+
+" Delete trailing whitespace, useful for python
+func! DeleteTrialingWS()
+    exe "normal mz"
+    %s/\s\+$//ge
+    exe "normal `z`"
+endfunc
+if has("autocmd")
+    au BufWrite *.py,*.t2t,*.sh :call DeleteTrialingWS()
+endif
+
+" au BufNewFile,BufRead *.py
+"     \ set tabstop=4
+"     \ set softtabstop=4
+"     \ set shiftwidth=4
+"     \ set textwidth=160
+"     \ set expandtab
+"     \ set autoindent
+
+" --------------------------- Html ------------------------------ "
+" au BufNewFile,BufRead *.js, *.html, *.css
+"     \ set tabstop=2
+"     \ set softtabstop=2
+"     \ set shiftwidth=2
+" -------------------------- QuickFix ----------------------------- "
+" " 按下F6，执行make clean
+" map <F6> :make clean<CR><CR><CR>
+" " 按下F7，执行make编译程序，并打开quickfix窗口，显示编译信息
+" map <F7> :make<CR><CR><CR> :copen<CR><CR>
+" " 按下F8，光标移到上一个错误所在的行
+" map <F8> :cp<CR>
+" " 按下F9，光标移到下一个错误所在的行
+" map <F9> :cn<CR>
+" " 以上的映射是使上面的快捷键在插入模式下也能用
+" imap <F6> <ESC>:make clean<CR><CR><CR>
+" imap <F7> <ESC>:make<CR><CR><CR> :copen<CR><CR>
+" imap <F8> <ESC>:cp<CR>
+" imap <F9> <ESC>:cn<CR>
+
+
+" Jump to the last edit position when open a file
+if has("autocmd")
+    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+
+" ----------------- Toggle Relative Line Number Display --------------
+func! Toggle_relative_nu()
+    if getbufvar('', "&rnu") == 0
+        set relativenumber
+    else
+        set norelativenumber
+    endif
+endfunc
+map<F2> :call Toggle_relative_nu()<CR>
+nnoremap<F3> :set nu!<CR>:set foldcolumn=0<CR>
+
+map<F11> :e $HOME/.vim/bundle/cppenv/autoload/cppenv.vim<CR>
+
+" ---------------------------- Emment ---------------------------
+" let g:user_emmet_mode='n'
+" let g:user_emmet_mode='inv'
+" let g:user_emmet_mode='a'
+" let g:emmet_html5=0
+" let g:user_emmet_install_global=0
+
+" ----------------------- Debug in vim ---------------------------------------------------
+" python
+autocmd BufNewFile,BufRead *.py map <F5> :! python3 %:p<CR>
+
+" C
+autocmd BufNewFile,BufRead *.c map <F7> :! gcc %:p -o a.out -g -lpthread<CR>
+autocmd BufNewFile,BufRead *.c map <F5> <F7>:! %:p:h/a.out<CR>
+
+" C++
+autocmd BufNewFile,BufRead *.cpp map <F7> :! g++ -std=c++11 %:p -g -lpthread<CR>
+autocmd BufNewFile,BufRead *.cpp map <F5> <F7>:! %:p:h/a.out<CR>
+autocmd BufNewFile,BufRead *.cpp map <F8> :! g++ -std=c++11 %:p -o a.out -g -lpthread -lboost_system -lboost_thread<CR>:! %:p:h/a.out<CR>
+autocmd BufNewFile,BufRead *.cpp map mkco :! g++ -std=c++11 %:p -o a.out -g -lcoroutine -lpthread -lboost_system -lboost_thread -ldl<CR>:! %:p:h/a.out<CR>
+
+" go
+autocmd BufNewFile,BufRead *.go map <F7> :! go build %<CR>
+autocmd BufNewFile,BufRead *.go map <F5> :! go run %<CR>
+
+" --- nvim --
+let g:python_host_prog ='/usr/bin/python'
+
+"--------- Term Settings -----------
+if s:colorful_term
+    "256 color --
+    let &t_Co=256
+    colorscheme molokai
+    " restore screen after quitting
+    if has("terminfo")
+        let &t_Sf="\ESC[3%p1%dm"
+        let &t_Sb="\ESC[4%p1%dm"
+    else                       
+        let &t_Sf="\ESC[3%dm"
+        let &t_Sb="\ESC[4%dm"
+    endif
+endif
+                                                                                                                                                                                                                                                                              
+" Odds n Ends
+" set ttymouse=xterm2 " makes it work in everything
+                                                                                                                                                                                                                                                                              
+" change cursor to vertical bar in insert mode
+if &term =~ '^xterm\\|rxvt'
+  " solid underscore
+  let &t_SI .= "\<Esc>[4 q"
+  " solid block
+  let &t_EI .= "\<Esc>[2 q"
+  " 1 or 0 -> blinking block
+  " 3 -> blinking underscore
+  " Recent versions of xterm (282 or above) also support
+  " 5 -> blinking vertical bar
+  " 6 -> solid vertical bar
+endif
+
+" Press Ctrl-J to scroll down or Ctrl-K to scroll up
+" function! s:Saving_scroll(cmd)
+"   let save_scroll = &scroll
+"   execute 'normal! ' . a:cmd
+"   let &scroll = save_scroll
+" endfunction
+" nnoremap <C-J> :call <SID>Saving_scroll("1<C-V><C-D>")<CR>
+" vnoremap <C-J> <Esc>:call <SID>Saving_scroll("gv1<C-V><C-D>")<CR>
+" nnoremap <C-K> :call <SID>Saving_scroll("1<C-V><C-U>")<CR>
+" vnoremap <C-K> <Esc>:call <SID>Saving_scroll("gv1<C-V><C-U>")<CR>

@@ -1,24 +1,18 @@
-# Cppenv: complete vim environment for coding C++
+# Vim4cpp: Complete vim environment for C++ development
 ***
 **source:** [https://github.com/juniway/vim4cpp](http://github.com/juniway/vim4cpp)
 
 ## Overview ##
-This project aims to build a whole vim envoronment for cpp programming, it provides a well tuned vim settings and plugins which provide an IDE-like coding experience under vim editor.
+This project aims to build a whole vim envoronment for cpp programming, it provides a well tuned vim settings and plugins which provide an IDE-like coding experience in vim editor.
 
-This project has two parts:
+**To support full fledged vim environment, the below things are required:**
+- vim 7.4+ compiled with python/python3 support
+- g++ (better g++4.8 or later)
+- clang compiler
+- cmake
+- ctags
 
-- **Vim installation**
-- **Vim plugins for coding C++**
-  
-Vim environment includes some tools below:
-
- - g++
- - git
- - cmake
- - python2
-    
-Plugins includes:
-
+**Plugins includes:**
 - Vundle
 - YouCompleteMe
 - syntastic
@@ -27,19 +21,19 @@ Plugins includes:
 - vim-airline
 - taglist
 - cscope
-- tagbar 
-- CtrlP 
+- tagbar
+- CtrlP
 - vim-gitgutter
-- vim-fugitive 
+- vim-fugitive
 - ultisnips
-- vim-snippet 
+- vim-snippet
 - Cpp11-Syntax-Support
 - nerdcommenter
 - powerline/fonts
 - vim-colorschemes
 - gundo.vim
 
-    
+
 You can run the script `autoconf/install` to install all of the vim environment I provide. It will automatically install all of the tools and plugins above. If you are in China, it takes only 4 minutes.
 
 ## Install ##
@@ -120,7 +114,7 @@ I used `;` as the vim leader charactor, so seted below:
 - **`;b`**  jump to begin of line. as `^`
 - **`;e`**  jump to end of line. as `$`
 - **`;w`**  save to file. as `:w`
-- **`;q`**  quit the buffer. as `:quit` 
+- **`;q`**  quit the buffer. as `:quit`
 - **`;Q`**  quit the vim. as `:quitall`
 - **`;hw`** jump to left window. as `<C-w>h`
 - **`;jw`** jump to under window. as `<C-w>j`
@@ -135,7 +129,7 @@ I used `;` as the vim leader charactor, so seted below:
 #### Jump
 
 - **`gy`** jump to the word on the cursor definition or declaration. as call the YCM method `GoToDefinitionElseDeclaration`.
-- **`gY`** show the word on the cursor definition or declaration on right window. 
+- **`gY`** show the word on the cursor definition or declaration on right window.
 - **`gl`** jump to last buffer. as `:b#<CR>`
 - **`gL`** jump to last buffer and show current buffer on right window
 
@@ -171,7 +165,7 @@ Support snippet trigger list below:
 
         namespace ucorf
     	{
-    
+
     	} //namespace ucorf
 
 - **`GNU License <name>`** Make gnu license copyright header in source file.

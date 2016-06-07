@@ -1,0 +1,52 @@
+########################################################
+snippet time
+`!p import time; snip.rv = time.strftime("%Y-%m-%d %H:%M:%S")`
+endsnippet
+
+########################################################
+snippet date
+`!p import time; snip.rv = time.strftime("%Y-%m-%d")`
+endsnippet
+
+########################################################
+snippet "namespace (\w+)" "namespace-snippet" r
+namespace ${1:`!p snip.rv = match.group(1)`}
+{
+
+} //namespace $1
+endsnippet
+
+########################################################
+snippet "GNU License ([\d\w]+)" "Make GNU License" r
+// Copyright (C) 2011, 2012  Google Inc.
+//
+// This file is part of ${1:`!p snip.rv = match.group(1)`}
+//
+// $1 is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// $1 is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with $1.  If not, see <http://www.gnu.org/licenses/>.
+
+endsnippet
+
+########################################################
+snippet "def ([\d\w]+)" "Make Cxx Class Method Definitions" r
+`!p
+import vim, sys
+sys.path.append(vim.eval('g:pyclang_dir'))
+import gen_methods
+class_name = match.group(1)
+code, err = gen_methods.gen_methods_definition(vim.current.buffer.name, class_name)
+snip.rv = code + err`
+endsnippet
+
+# class a {};
+# GNU License a

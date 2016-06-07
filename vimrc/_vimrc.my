@@ -1,0 +1,146 @@
+set fileencoding=utf-8
+set fileencodings=utf-8
+set termencoding=utf-8
+set fileformats=unix
+set encoding=prc
+set ffs=unix,dos,mac
+
+" 基础配置
+filetype on									"检测文件类型
+filetype indent on           				"针对不同的文件类型采用不同的缩进格式
+filetype plugin on           				"允许插件
+filetype plugin indent on     				"启动自动补全
+
+
+"autocmd! bufwritepost _vimrc source %		"vimrc文件修改之后自动加载。 windows。
+"autocmd! bufwritepost .vimrc source %		"vimrc文件修改之后自动加载。 linux。
+syntax enable "开启代码高亮
+syntax on "打开高亮
+set completeopt=longest,menu 				"自动补全配置,让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
+"set relativenumber number   				"相对行号，可用Ctrl+n在相对/绝对行号间切换
+set cursorcolumn             				"突出显示当前列，可用Ctrl+m切换是否显示
+"set cursorline               				"突出显示当前行，可用Ctrl+m切换是否显示
+set history=3000             				"history存储长度
+set nocompatible             				"非兼容vi模式,避免以前版本的一些bug和局限
+set nu 										"显示行数 
+set shiftwidth=4             				"换行时行间交错使用4空格
+set cindent shiftwidth=4     				"自动缩进4空格
+set tabstop=4                 				"让一个tab等于4个空格
+set vb t_vb=
+set showmatch                 				"显示括号配对情况
+"set autoread                 				"当文件在外部被改变时，Vim自动更新载入
+set nowrap                   				"设置不自动换行
+set writebackup               				"设置无备份文件
+set nobackup 								"取消备份。 视情况自己改
+set noswapfile 								"关闭交换文件
+set showmode 								"开启模式显示  
+set cmdheight=1               				"命令部分高度为1 
+"set shortmess=atI             				"启动的时候不显示那个援助索马里儿童的提示
+set t_ti= t_te=               				"退出vim后，内容显示在终端屏幕 设置 退出vim后，内容显示在终端屏幕,
+   											"可以用于查看和复制好处：误删什么的，如果以前屏幕打开，可以找回去掉输入错误的提示声音
+set title                     				"change the terminal's title
+set novisualbell             				"don't beep
+set noerrorbells             				"don't beep
+set t_vb=
+set tm=500
+
+"set backup                   				"备份
+"set backupext=.bak
+"set backupdir=/tmp/vimbk/
+set mat=4                     				"Blink times every second when matching brackets
+set hidden                   				"A buffer becomes hidden when it is abandoned
+set wildmode=list:longest
+set ttyfast
+
+
+set wildignore=*.swp,*.bak,*.pyc,*.class
+set scrolloff=10
+
+set selection=old
+"set selectmode=mouse,key
+set viminfo^=%                   			"Remember info about open buffers on close
+set viminfo+=! 								" 保存全局变量
+set magic                       			"正则表达式匹配形式
+set backspace=eol,start,indent   			"Configure backspace so it acts as it should act
+"set backspace=indent,eol,start whichwrap+=<,>,[,] "允许退格键的使用
+"set iskeyword+=_,$,@,%,#,-   				"带有如下符号的单词不要被换行分割 
+set iskeyword+=_,$,@,%,#   					"带有如下符号的单词不要被换行分割 
+											" 字符间插入的像素行数目
+"au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}   
+set filetype=mkd   "markdown配置
+
+
+"set go=             						"不要图形按钮  
+set cul             						"高亮光标所在行
+"autocmd InsertEnter * se cul 				"用浅色高亮当前行  
+set ruler           						"显示标尺  
+"set showcmd         						"输入的命令显示出来，看的清楚些  
+
+au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" F1 - F6 设置
+" F1 废弃这个键,防止调出系统帮助
+" F2 行号开关，用于鼠标复制代码用
+" F3 换行开关
+" F4 调出listbar函数列表
+" F5 粘贴模式paste_mode开关,用于有格式的代码粘贴
+" F6 语法开关，关闭语法可以加快大文件的展示
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noremap <F1> <Esc>"
+nnoremap <F2> :set nonumber! number?<CR>
+nnoremap <F3> :set wrap! wrap?<CR>
+nmap <silent> <F4> :TagbarToggle<CR> 		"按下F4就可以呼出文件的函数列表及变量
+set pastetoggle=<F5> 
+au InsertLeave * set nopaste
+nnoremap <F6> :exec exists('syntax_on') ? 'syn off' : 'syn on'<CR>
+
+" 命令行模式增强，ctrl - a到行首， -e 到行尾
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+" 去掉搜索高亮
+noremap <silent><leader>/ :nohls<CR>
+
+"Use arrow key to change buffer"
+noremap <left> :bp<CR>
+noremap <right> :bn<CR>
+
+
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+
+"共享剪贴板  
+set clipboard+=unnamed
+
+if &bg == "dark"   " 根据你的背景色风格来设置不同的书签颜色
+ highlight SignColor ctermfg=white ctermbg=blue guifg=wheat guibg=peru
+else               " 主要就是修改guibg的值来设置书签的颜色
+ highlight SignColor ctermbg=white ctermfg=blue guibg=grey guifg=RoyalBlue3
+endif
+
+
+if $TERM =~ '^xterm' || $TERM =~ '^screen' || $TERM=~ '256color$'
+    set t_Co=256
+    set background=dark
+colorscheme darkblue
+elseif has('gui_running')
+    set background=light
+    colorscheme solarized
+elseif $TERM =~ 'cons256'
+    colorscheme default
+endif
+
+" ====================== Plugins ==================================
+set nocompatible
+if !isdirectory(expand("~/.vim/bundle/vundle/.git"))
+  !git clone git://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+endif
+
+filetype off " must be off before Vundle has run
+set runtimepath+=~/.vim/bundle/vundle/

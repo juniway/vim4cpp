@@ -11,6 +11,7 @@ This project aims to build a whole vim envoronment for cpp programming, it provi
 - clang compiler
 - cmake
 - ctags
+- cscope
 
 **Plugins includes:**
 - Vundle

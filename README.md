@@ -35,7 +35,7 @@ This project aims to build a whole vim envoronment for cpp programming, it provi
 - gundo.vim
 
 
-You can run the script `autoconf/install` to install all of the vim environment I provide. It will automatically install all of the tools and plugins above. If you are in China, it takes only 4 minutes.
+You can simply run the script `autoconf/install` to install all the tools and plugins above.
 
 ## Install ##
 

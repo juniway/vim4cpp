@@ -1,0 +1,236 @@
+set nocompatible
+if !isdirectory(expand("~/.vim/bundle/vundle/.git"))
+    !git clone git://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+endif
+
+filetype off
+"-------------- Vundle Plugins -----------------------------
+set rtp+=~/.vim/bundle/vundle,$GOROOT/misc/vim
+call vundle#begin()
+Plugin 'flazz/vim-colorschemes'
+Plugin 'tomasr/molokai'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'fatih/vim-go'
+Plugin 'SirVer/ultisnips'
+Plugin 'ctrlpvim/ctrlp.vim'
+call vundle#end()
+"------------- Plugins End -----------------------------
+
+filetype indent plugin on
+"--------------- basic config ------------------------------
+syntax on
+syntax enable
+
+set path+=/usr/include,/usr/include/linux,/usr/include/x86_64-linux-gnu,/usr/local/include
+
+"----------------  Color Scheme --------------------------------
+" default colorscheme is located  at /usr/share/vim/vim74/colors
+let s:running_windows = has("win16") || has("win32") || has("win64")
+let s:colorful_term = (&term =~ "xterm") || (&term =~ "screen") 
+
+if $TERM =~ '^xterm' || $TERM =~ '^screen' || $TERM=~ '256color$'
+    set t_Co=256
+    colorscheme molokai
+    let s:molokai_original = 1
+    let g:rehash256 = 1
+    color evening
+elseif has('gui_running')
+    set background=light
+    colorscheme solarized
+elseif $TERM =~ 'cons256'
+    colorscheme default
+endif
+
+" colorscheme molokai   " Note: When open vim in tmux session, since tmux is by defaul not true color 256 mode,
+                        " which causes vim visual mode doesn't display correctly for molokai colorscheme, we 
+                        " can force tmux to use 256 colors by tmux -2
+
+set fileencoding=utf-8
+set fileencodings=utf-8
+set termencoding=utf-8
+set fileformats=unix
+set encoding=prc
+set ffs=unix,dos,mac
+set updatetime=100
+
+set background=dark     " set background color matching syntax 
+set cursorline
+set cursorcolumn
+set encoding=utf-8
+set fenc=utf-8
+set fencs=utf-8,usc-bom,euc-jp,gb18030,gbk,gb2312,cp936
+set fileencoding=utf-8
+" set fileencodings=utf-8,gbk              ",utf-16,gb2312 可识别文件编码
+" set langmenu=zh_CN.UTF-8
+" language message zh_CN.UTF-8
+" hi Normal ctermbg=236 guibg=#32322f
+" hi NonText ctermbg=236 guibg=#32322f
+" set colorcolumn=80
+hi Colorcolumn ctermbg=blue ctermfg=blue guibg=lightgrey
+" au BufWinEnter * let w:m2= matchadd('ColorColumn', '\%81v', -1)
+
+" hi Cursorcolumn ctermbg=red
+" hi CursorLine cterm=underline term=NONE guibg=green
+
+" augroup collumnLimit
+"     autocmd!
+"     autocmd BufEnter,WinEnter,FileType c,cpp,python 
+"          \  hi CollumnLimit ctermbg=DarkGrey guibg=DarkGrey
+"     let collumnLimit = 80
+"     let pattern = '\%<' . (collumnLimit+1) . 'v.\%>' . collumnLimit . 'v'
+"     autocmd BufEnter,WinEnter,FileType c,cpp,python
+"          \  let w:m1=matchadd('CollumnLimit', pattern, -1)
+" augroup END
+
+" let &colorcolumn=join(range(81,999),",")
+
+set history=999
+set undolevels=700
+set textwidth=360
+set nowrap              " don't wrap lines"
+set fo-=t               " don't automatically wrap text when typing
+set scroll=8            " set number of line that Ctrl-D or Ctrl-U can scroll
+set scrolloff=10        " scrolloff, leave 10 line above and below when moving cursor
+set wildmenu            " Enable a menu at the bottom of the window for command completion when type command in vim
+set showcmd             " Show what command you are typing at the bottom
+set number
+set numberwidth=1       " Width will automatically increase to fit the width of maximun number of line, default 4
+" set rnu               " relative number Vim 7.3+
+set whichwrap+=<,>,[,],h,l  " Make -> or <- can go beyond current line
+" set linebreak         " switch a word to the next line if its len too long
+" highlight OverLength ctermbg=red guibg=#C0C0C0 
+" match OverLength /\%81v.\+/
+
+"-- Indent --
+set expandtab           " Tab can be replaced with whitespace
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
+set cindent             " ----------------- C/C++ Code Style Setting --------------
+                        " V select a block of code, then =, code will auto indent
+                        " :set paste before do a paste where the buffer is
+                        " another file, after paste, :set nopaste to get back
+                        " autoindent
+
+"-- Matching --
+set showmatch           " Show matching brackets{}[]()...
+set matchtime=1
+set ignorecase          " Case insensitive matching
+set smartcase
+set magic               " It is recommanded that magic is set, helpful for pattern matching
+set completeopt=longest,menu
+
+set backspace=indent,eol,start      " Make backspace key can delete when it hit line begin, tab, and start
+set nostartofline       " When doing page scrolling by using Ctrl+d/u/b/f, or "G","gg", etc, keep cursor in same column
+set confirm             " :q :qa with confirm
+set vb t_vb=            " disable visualbell and window flashing when error occurs"
+" set shortmess=filnxtToO         " Default is filnxtToO, it is good because
+                                  " it mutes annoying 'Hit Enter to continue'
+                                  " prompt
+set cmdheight=1         " leave space in the bottom of the window for displaying messages
+
+"-- Search --
+set hlsearch                        " Highlight search reasult
+set incsearch                       " Matching when typing
+"set nowrapscan                     " Don't search rollback when hit file end
+
+" set list                          " should be used combined with the below line
+" set listchars=eol:$,nbsp:_,tab:>-,trail:~,extends:>,precedes:< " display whitespace invisible characters as ...
+" set list lcs=tab:>-
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+set history=200
+
+"-- Status --
+set lazyredraw                      " Don't redraw while running macros
+set statusline=%F
+set title                           "show title in console title bar
+set laststatus=2
+set ruler
+
+"-- Buffers --
+set autoread            " auto update file when it is modified in another window"
+set autowrite           " be cautin with autowrite in case of some accident type was saved out of your awareness
+set hidden              " keep hidden buffers when switch between unsaved windows
+set clipboard+=unnamed  " share windows clipboard
+set pastetoggle=<F11>
+
+set notimeout ttimeout ttimeoutlen=200
+
+" Other Features
+" set spell
+
+"-- Backup --
+" Disable stupid backup and swap files - they trigger too many events
+set nobackup
+set nowb              " no write backup, make backup before overwriting a file
+set noswapfile
+" set backupdir-=.
+" set backupdir^=~/tmp,/tmp
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip "Linux/MaxOSX
+
+"-- Mouse --
+" set mouse=a       "enable mouse usage whenever possible
+
+"-- Fold --
+"set nofoldenable                      " Fold enable
+set foldlevel=100                        " Fold Level, default 0
+"set foldcolumn=1
+set foldopen=block,hor,mark,percent,quickfix,tag      " These movements open folds
+"set foldmethod=syntax                 " Default manual
+function SimpleFoldTest() "{
+    return getline(v:foldstart).' '
+endfunction "}
+set foldtext=SimpleFoldText()           " Custom fold text function (cleaner than default)
+
+" ---- GUI Options -----
+" set guicursor=a:block-blinkon0        " disable cursor blinking
+" set guioptions-=m
+" set guioptions-=T
+" guifont=Courier\ New:h12
+
+let mapleader=";"
+nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+
+" nnoremap <c-n> :nohl<CR>
+nnoremap <c-n> :cnext<CR>
+nnoremap <c-m> :cprevious<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>WQ :wa<CR>:q<CR>
+nnoremap <leader>Q :qa!<CR>
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+inoremap <C-\> <C-o>:left 0<Cr><BS>
+
+" easier moving between tabs
+"" map <Leader>n <esc>:tabprevious<CR>
+"" map <Leader>m <esc>:tabnext<CR>
+
+nnoremap <CR> o<Esc>
+" nnoremap <space> *
+
+"  vim-go
+let g:go_fmt_command = "goimports"
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
+let g:go_metalinter_autosave = 1
+let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+let g:go_metalinter_deadline = "5s"
+let g:go_auto_type_info = 1
+" let g:go_fmt_fail_silently = 1
+" let g:go_snippet_case_type = "camelcase"

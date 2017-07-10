@@ -1,0 +1,20 @@
+# Great Source
+# http://tldp.org/LDP/abs/html/sample-bashrc.html
+
+if [ -f ~/.bash_aliases ]; then
+. ~/.bash_aliases
+fi
+
+# git installed in msys2 is buggy, so we use GitBash's git in msys2 terminal
+export GITPATH="/C/Program Files/GitBash/mingw64/bin/"
+export SUBHOME="/c/Program Files/Sublime Text 3/"
+export GOPATH=/d/go
+export GOBIN=$GOPATH/bin
+export NODEHOME="/C/Program Files/nodejs/"
+export CNPMHOME="/C/Users/za-shichunhui/AppData/Roaming/npm/"
+export PATH=$PATH:$SUBHOME:$GOBIN:$NODEHOME:$CNPMHOME:$GITPATH
+
+alias subl="sublime_text"
+
+source /home/za-shichunhui/.local/bin/bashmarks.sh
+

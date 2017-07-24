@@ -1,6 +1,10 @@
 set nocompatible
 filetype off
 "-------------- Vundle Plugins -----------------------------
+if !isdirectory(expand("~/.vim/bundle/Vundle.vim"))
+    !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+endif
+
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
@@ -19,7 +23,6 @@ Plugin 'SirVer/ultisnips'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'powerline/fonts'
 Plugin 'flazz/vim-colorschemes'
-
 Plugin 'klen/python-mode'
 
 " Plugin 'sjl/gundo.vim'
@@ -240,8 +243,9 @@ nnoremap<F10> :NERDTreeToggle<CR>
 " autocmd vimenter * NERDTree "automatic open NerdTree when enter vim"
 autocmd StdinReadPre * let s:std_in=1
 auto VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeIgnore=['\.pyc$', '\~$']                "ignore files in NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " ---------------------------- UltiSnips ---------------------------- "
 let g:UltiSnipsUsePythonVersion = 2

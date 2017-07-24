@@ -15,4 +15,3 @@ export CNPMHOME="/C/Users/za-shichunhui/AppData/Roaming/npm/"
 export PATH=$PATH:$SUBHOME:$GOBIN:$NODEHOME:$CNPMHOME:$GITPATH
 
 source ~/.local/bin/bashmarks.sh
-

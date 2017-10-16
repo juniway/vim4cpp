@@ -1,31 +1,42 @@
 # use 'git config -l' to list all config info
+# use 'git config --global core.editor "/usr/bin/vim"' to add a config variable
 [alias]
     aa = add --all
     bv = branch -vv
     ba = branch -ra
     bd = branch -d
-    ca = commit --amend
+    co = checkout
     cb = checkout -b
+    ca = commit --amend
     cm = commit -a --amend -C HEAD
     ci = commit -a -v
-    co = checkout
+    pr = pull --rebase
+    ss = stash save
+    sh = stash show
+    sp = stash pop
     di = diff
     ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
     ld = log --pretty=format:"%C(yellow)%h\\ %C(green)%ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short --graph
     ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+    oneline = log --oneline
     mm = merge --no-ff
     st = status --short --branch
-    tg = tag -a 
+    tg = tag -a
     pu = push --tags
-    un = reset --hard HEAD  
+    un = reset --hard HEAD
     uh = reset --hard HEAD^
+    mt = mergetool
     bc4 = mergetool -t bc4
-[color]  
-    diff = auto  
-    status = auto  
-    branch = auto 
-[branch]  
+[branch]
     autosetuprebase = always
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+[core]
+    editor = /usr/bin/vim
+[credential]
+    helper = manager
 [diff]
     tool = bc4
 [difftool "bc4"]
@@ -38,5 +49,4 @@
 [user]
     name = juniway
     email = juniway@sina.com
-[credential]
-    helper = manager
+

@@ -1,4 +1,5 @@
-# some more ls aliases
+## ~/.config/fish/functions/aliases.fish
+
 alias ll 'ls -alF'
 alias la 'ls -A'
 #alias l 'ls -CF'

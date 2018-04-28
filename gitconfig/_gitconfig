@@ -2,14 +2,16 @@
 # use 'git config --global core.editor "/usr/bin/vim"' to add a config variable
 [alias]
     aa = add --all
+    br = branch
     bv = branch -vv
     ba = branch -ra
     bd = branch -d
-    co = checkout
-    cb = checkout -b
     ca = commit --amend
+    cb = checkout -b
     cm = commit -a --amend -C HEAD
+    amno = commit -a --amend --no-edit
     ci = commit -a -v
+    co = checkout
     pr = pull --rebase
     ss = stash save
     sh = stash show
@@ -23,7 +25,8 @@
     st = status --short --branch
     tg = tag -a
     pu = push --tags
-    un = reset --hard HEAD
+    pr = pull --rebase
+    un = reset --hard HEAD  
     uh = reset --hard HEAD^
     mt = mergetool
     bc4 = mergetool -t bc4
@@ -35,6 +38,7 @@
     branch = auto
 [core]
     editor = /usr/bin/vim
+    excludesfile = /Users/alex/.gitignore_global
 [credential]
     helper = manager
 [diff]
@@ -45,6 +49,9 @@
     tool = bc4
 [mergetool "bc4"]
     cmd = "\"c:/program files (x86)/beyond compare 4/bcompare.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\""
+    trustExitCode = true
+[mergetool "sourcetree"]
+    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
     trustExitCode = true
 [user]
     name = juniway

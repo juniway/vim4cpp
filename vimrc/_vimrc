@@ -1,5 +1,5 @@
 " Add below command if use fish shell
-" set shell=/usr/bin/bash
+set shell=/bin/bash
 set nocompatible
 if !isdirectory(expand("~/.vim/bundle/Vundle.vim"))
     !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -7,15 +7,19 @@ endif
 
 filetype off
 "-------------- Vundle Plugins -----------------------------
-set rtp+=~/.vim/bundle/vundle,$GOROOT/misc/vim
+set rtp+=~/.vim/bundle/Vundle.vim,$GOROOT/misc/vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'raphamorim/lucario'
 Plugin 'tomasr/molokai'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'fatih/vim-go'
 Plugin 'SirVer/ultisnips'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'kshenoy/vim-signature'
+Plugin 'tomlion/vim-solidity'
 call vundle#end()
 "------------- Plugins End -----------------------------
 
@@ -24,7 +28,7 @@ filetype indent plugin on
 syntax on
 syntax enable
 
-set path+=/usr/include,/usr/include/linux,/usr/include/x86_64-linux-gnu,/usr/local/include
+set path+=/usr/include,/usr/include/linux,/usr/include/x86_64-linux-gnu,/usr/local/include,/home/winkee/*
 
 "----------------  Color Scheme --------------------------------
 " default colorscheme is located  at /usr/share/vim/vim74/colors
@@ -33,8 +37,9 @@ let s:colorful_term = (&term =~ "xterm") || (&term =~ "screen")
 
 if $TERM =~ '^xterm' || $TERM =~ '^screen' || $TERM=~ '256color$'
     set t_Co=256
+    " colorscheme lucario
     colorscheme molokai
-    let s:molokai_original = 1
+    "let s:molokai_original = 1
     let g:rehash256 = 1
     color evening
 elseif has('gui_running')
@@ -94,7 +99,8 @@ set nowrap              " don't wrap lines"
 set fo-=t               " don't automatically wrap text when typing
 set scroll=8            " set number of line that Ctrl-D or Ctrl-U can scroll
 set scrolloff=10        " scrolloff, leave 10 line above and below when moving cursor
-set wildmenu            " Enable a menu at the bottom of the window for command completion when type command in vim
+set wildmenu  wildmode=full           " Enable a menu at the bottom of the window for command completion when type command in vim
+set wildchar=<Tab> wildcharm=<C-Z>
 set showcmd             " Show what command you are typing at the bottom
 set number
 set numberwidth=1       " Width will automatically increase to fit the width of maximun number of line, default 4
@@ -115,6 +121,7 @@ set cindent             " ----------------- C/C++ Code Style Setting -----------
                         " :set paste before do a paste where the buffer is
                         " another file, after paste, :set nopaste to get back
                         " autoindent
+let label=v:lnum
 
 "-- Matching --
 set showmatch           " Show matching brackets{}[]()...
@@ -132,6 +139,7 @@ set vb t_vb=            " disable visualbell and window flashing when error occu
                                   " it mutes annoying 'Hit Enter to continue'
                                   " prompt
 set cmdheight=1         " leave space in the bottom of the window for displaying messages
+set ma
 
 "-- Search --
 set hlsearch                        " Highlight search reasult
@@ -156,7 +164,8 @@ set autoread            " auto update file when it is modified in another window
 set autowrite           " be cautin with autowrite in case of some accident type was saved out of your awareness
 set hidden              " keep hidden buffers when switch between unsaved windows
 set clipboard+=unnamed  " share windows clipboard
-set pastetoggle=<F11>
+set paste
+set pastetoggle=<F9>
 
 set notimeout ttimeout ttimeoutlen=200
 
@@ -202,15 +211,28 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
 
 " nnoremap <c-n> :nohl<CR>
-nnoremap <c-n> :cnext<CR>
-nnoremap <c-m> :cprevious<CR>
+" quickfix ?
+" nnoremap <c-n> :cnext<CR>
+" nnoremap <c-m> :cprevious<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
+nnoremap <leader>z :wq<CR>
 nnoremap <leader>WQ :wa<CR>:q<CR>
-nnoremap <leader>Q :qa!<CR>
-autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-autocmd FileType go nmap <Leader>i <Plug>(go-info)
+nnoremap <leader>Q :qa<CR>
+nnoremap <Leader>b :ls<CR>:b<Space>
+
+" buffer
+nnoremap <Leader>N :bnext<CR>
+nnoremap <Leader>P :bprev<CR>
+nnoremap <c-n> :b <c-z>
+
+" tab
+" nnoremap <C-Left> :tabprev<CR>
+" nnoremap <C-Right> :tabnext<CR>
+nnoremap <C-PgDn> :tabprev<CR>
+nnoremap <C-PgUp> :tabnext<CR>
+nnoremap <silent> <A-Left> :execute 'silent! tabmove ' . (tabpagenr()-2)<CR>
+nnoremap <silent> <A-Right> :execute 'silent! tabmove ' . (tabpagenr()+1)<CR>
 
 inoremap <C-\> <C-o>:left 0<Cr><BS>
 
@@ -221,19 +243,36 @@ inoremap <C-\> <C-o>:left 0<Cr><BS>
 nnoremap <CR> o<Esc>
 " nnoremap <space> *
 
-"  vim-go
-let g:go_fmt_command = "goimports"
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_generate_tags = 1
-let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['vet', 'golint']
-let g:go_metalinter_deadline = "5s"
-let g:go_auto_type_info = 1
+"  --------------------------- vim-go -----------------------------  "
+" autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
+" let g:go_fmt_command = "goimports"
+" let g:go_highlight_types = 1
+" let g:go_highlight_fields = 1
+" let g:go_highlight_functions = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_operators = 1
+" let g:go_highlight_extra_types = 1
+" let g:go_highlight_build_constraints = 1
+" let g:go_highlight_generate_tags = 1
+" let g:go_metalinter_autosave = 1
+" let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+" let g:go_metalinter_deadline = "5s"
+" let g:go_auto_type_info = 1
 " let g:go_fmt_fail_silently = 1
 " let g:go_snippet_case_type = "camelcase"
+" let g:go_test_timeout = '10s'
+
+" ---------------------------- NerdTree ---------------------------- "
+nnoremap<F10> :NERDTreeToggle<CR>
+" autocmd vimenter * NERDTree "automatic open NerdTree when enter vim"
+autocmd StdinReadPre * let s:std_in=1
+auto VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+let NERDTreeIgnore=['\.pyc$', '\~$']                "ignore files in NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" back to previous position
+au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif"'")"'")"'")
